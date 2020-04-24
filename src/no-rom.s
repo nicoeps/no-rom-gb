@@ -75,9 +75,9 @@ Main:
 
 .enableLCD
 	ld a, %11100100
-    ldh [rBGP], a
+	ldh [rBGP], a
 	ld hl, rLCDC
-    set 7, [hl]
+	set 7, [hl]
 
 .loop
 	ldh a, [rDIV]
