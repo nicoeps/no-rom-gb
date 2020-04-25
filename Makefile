@@ -12,8 +12,6 @@ SRCS      := $(wildcard $(SRCDIR)/*.s)
 OBJS      := $(SRCS:$(SRCDIR)/%.s=$(OBJDIR)/%.o)
 ROMS      := $(SRCS:$(SRCDIR)/%.s=$(OBJDIR)/%.gb)
 
-.PHONY: clean
-
 all: $(OBJDIR) $(ROMS)
 
 $(OBJDIR):
@@ -21,10 +19,12 @@ $(OBJDIR):
 
 $(ROMS): $(OBJDIR)/%.gb : $(OBJDIR)/%.o
 	$(LINKER) -n $(basename $@).sym -m $(basename $@).map -o $@ $<
-	$(FIX) -v -p 255 $@
+	$(FIX) -v -p0 $@
 
 $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.s
 	$(ASM) $(ASMFLAGS) -o $@ $<
+
+.PHONY: clean
 
 clean:
 	rm -rf $(OBJDIR)
