@@ -10,11 +10,11 @@ SECTION "Title", ROM0[$134]
 
 SECTION "Tileset", ROM0
 Tileset:
-INCBIN "no-rom.2bpp"
+INCBIN "no-rom-island.2bpp"
 
 SECTION "Tilemap", ROM0
 Tilemap:
-INCBIN "no-rom.tilemap"
+INCBIN "no-rom-island.tilemap"
 
 SECTION "Main", ROM0[$150]
 Main:
