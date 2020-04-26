@@ -10,19 +10,19 @@ SECTION "Title", ROM0[$134]
 
 SECTION "Tileset", ROM0
 Tileset:
-INCBIN "no-rom-scroll.2bpp"
+INCBIN "no-rom-pb.2bpp"
 
 SECTION "Tilemap", ROM0
 Tilemap:
-	db $40, $41, $42, $43, $44, $45, $46, $42, $42, $42, $47, $45, $42, $48
-	db $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55, $56
-	db $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64
+	db $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D
+	db $4E, $4F, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5A, $5B
 
 SECTION "Main", ROM0[$150]
 Main:
 	nop
 	di
 	jp .setup
+
 
 .waitVBlank
 	ldh a, [rLY]
@@ -31,6 +31,14 @@ Main:
 	ret
 
 .setup
+	ld hl, rLCDC
+	set 6, [hl]
+	set 5, [hl]
+	ld hl, rWY
+	ld [hl], 144
+	inc hl
+	ld [hl], 33
+	
 	ld bc, $8400
 	ld de, $8700
 	ld hl, Tileset
@@ -45,8 +53,8 @@ Main:
 	jr c, .readTileset
 
 	ld hl, Tilemap
-	ld bc, $9A43
-	ld de, $9A51
+	ld bc, $9C00
+	ld de, $9C0E
 
 .readTilemap
 	call .waitVBlank
@@ -64,7 +72,7 @@ Main:
 	ld e, a
 	ld a, e
 
-	cp a, $92
+	cp a, $2F
 	jr c, .readTilemap
 
 	ld hl, _OAMRAM
@@ -77,10 +85,12 @@ Main:
 	cp a, $F0
 	jr nz, .clearOAM
 
+	ld b, 0
+
 .loop
-	ld a, [rSCY]
-	cp a, 32
-	jr nc, .loop
+	ld a, [rWY]
+	cp a, 90
+	jr c, .loop
 
 	ldh a, [rDIV]
 	cp a, 255
@@ -88,8 +98,13 @@ Main:
 	jr .loop
 
 .move
-	ld hl, rSCY
-	inc [hl]
+	inc b
+	ld a, 3
+	cp a, b
+	jr nc, .loop
+	ld b, 0
+	ld hl, rWY
+	dec [hl]
 
 	ldh [rDIV], a
 	jr .loop

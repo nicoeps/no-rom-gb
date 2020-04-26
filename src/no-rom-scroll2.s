@@ -31,6 +31,14 @@ Main:
 	ret
 
 .setup
+	ld hl, rLCDC
+	set 6, [hl]
+	set 5, [hl]
+	ld hl, rWY
+	ld [hl], 144
+	inc hl
+	ld [hl], 7
+	
 	ld bc, $8400
 	ld de, $8700
 	ld hl, Tileset
@@ -45,8 +53,8 @@ Main:
 	jr c, .readTileset
 
 	ld hl, Tilemap
-	ld bc, $9A43
-	ld de, $9A51
+	ld bc, $9C03
+	ld de, $9C11
 
 .readTilemap
 	call .waitVBlank
@@ -64,7 +72,7 @@ Main:
 	ld e, a
 	ld a, e
 
-	cp a, $92
+	cp a, $52
 	jr c, .readTilemap
 
 	ld hl, _OAMRAM
@@ -78,9 +86,9 @@ Main:
 	jr nz, .clearOAM
 
 .loop
-	ld a, [rSCY]
-	cp a, 32
-	jr nc, .loop
+	ld a, [rWY]
+	cp a, 84
+	jr c, .loop
 
 	ldh a, [rDIV]
 	cp a, 255
@@ -88,8 +96,8 @@ Main:
 	jr .loop
 
 .move
-	ld hl, rSCY
-	inc [hl]
+	ld hl, rWY
+	dec [hl]
 
 	ldh [rDIV], a
 	jr .loop
