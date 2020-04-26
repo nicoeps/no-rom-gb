@@ -14,8 +14,8 @@ INCBIN "no-rom-pb.2bpp"
 
 SECTION "Tilemap", ROM0
 Tilemap:
-	db $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D
-	db $4E, $4F, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5A, $5B
+	db $40, $41, $42, $43, $44, $45, $46, $41, $41, $41, $47, $41, $41, $41
+	db $48, $49, $4A, $4B, $4C, $4D, $4E, $49, $4F, $50, $51, $41, $41, $41
 
 SECTION "Main", ROM0[$150]
 Main:
@@ -37,7 +37,7 @@ Main:
 	ld hl, rWY
 	ld [hl], 144
 	inc hl
-	ld [hl], 33
+	ld [hl], 43
 	
 	ld bc, $8400
 	ld de, $8700
@@ -85,8 +85,6 @@ Main:
 	cp a, $F0
 	jr nz, .clearOAM
 
-	ld b, 0
-
 .loop
 	ld a, [rWY]
 	cp a, 90
@@ -97,12 +95,14 @@ Main:
 	jp z, .move
 	jr .loop
 
+.sync
+	ldh a, [rLY]
+	cp 144
+	jr nz, .sync
+	ret
+
 .move
-	inc b
-	ld a, 3
-	cp a, b
-	jr nc, .loop
-	ld b, 0
+	call .sync
 	ld hl, rWY
 	dec [hl]
 

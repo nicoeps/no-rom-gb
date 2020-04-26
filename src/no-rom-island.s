@@ -35,7 +35,7 @@ Main:
 	res 7, [hl]
 	
 	ld bc, _VRAM
-	ld de, $84B0
+	ld de, $84C0
 	ld hl, Tileset
 
 .readTileset
